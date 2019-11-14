@@ -1,4 +1,5 @@
 from simulation.models import Model
+import math
 
 class Environment:
     def __init__ (self, size=(500, 500)):
@@ -34,11 +35,18 @@ class Environment:
 
         #M = [row for row in]
 
+        theta = (math.radians(self.observer.orientation))
+
         for j in range(lim_x):
             for i in range(lim_y):
                 skip=0
                 for o in observable_objs:
-                    r_x, r_y = int(o.x-(self.observer.x-(lim_x/2))), int(o.y-(self.observer.y-(lim_y/2)))
+
+                    # Add rotation
+                    ox = math.cos(theta)*o.x-math.sin(theta)*o.y
+                    oy = math.sin(theta)*o.x+math.cos(theta)*o.y
+
+                    r_x, r_y = int(ox-(self.observer.x-(lim_x/2))), int(oy-(self.observer.y-(lim_y/2)))
                     if r_x==j and r_y==i:
                         print(o.model.id, end=' ')
                         skip = 1

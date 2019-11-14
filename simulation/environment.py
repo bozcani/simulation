@@ -12,7 +12,7 @@ class Environment:
     def add_observer(self, observer):
         self.observer = observer    
 
-    def observe(self, area=(16,16), grid_size=0.5):
+    def observe(self, area=(16,16)):
         print("Observing...")
         print(self.observer)
 
@@ -29,9 +29,8 @@ class Environment:
                     observable_objs.append(obj)
 
         print("Observed objects:")
-        for o in observable_objs:
-            print(o)            
-        #TODO
+        #for o in observable_objs:
+        #    print(o)            
 
         #M = [row for row in]
 
@@ -62,20 +61,39 @@ class Environment:
             print(o)    
 
 
+    def tick(self):
+        """ Move objects and observer according to the their velocities. """
+        
+        # Turn the observer.
+        self.observer.orientation += self.observer.angular_Z
+
+        # Translate the observer.
+        theta = (math.radians(self.observer.orientation))
+        self.observer.x += math.cos(theta)*self.observer.linear_X
+        self.observer.y += math.sin(theta)*self.observer.linear_X
+
+        for obj in self.objects:
+            # Turn the object.
+            obj.theta += obj.angular_Z
+
+            # Move the object.
+            theta = (math.radians(obj.theta))
+            obj.x += math.cos(theta)*obj.linear_X
+            obj.y += math.sin(theta)*obj.linear_X
 
 class Object:
-    def __init__(self, model, x, y, theta, Vx, angularZ):
+    def __init__(self, model, x, y, theta, linear_X, angular_Z):
         self.model = model
         self.x = x
         self.y = y
         self.theta = theta
-        self.Vx = Vx
-        self.angularZ = angularZ  
+        self.linear_X = linear_X
+        self.angular_Z = angular_Z  
 
     def __str__(self):
         info = "Object -> (x,y)=("+str(self.x)+", "+str(self.y)+'), '
         info += "ori: "+str(self.theta)+", "
-        info += "Vx: "+str(self.Vx)+", "
-        info += "angularZ: "+str(self.angularZ)
+        info += "Vx: "+str(self.linear_X)+", "
+        info += "angular_Z: "+str(self.angular_Z)
         info += ", which is "+str(self.model)
         return info              
